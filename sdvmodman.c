@@ -17,6 +17,7 @@ struct mod_t {
 
 void print_mods(struct mod_t *mods, int mods_count) {
     int i = 0;
+    printf("\e[1;1H\e[2J");
     printf("\nWelcome to SDV Mod Manager\n\nMods Enabled:\n");
     for (; i < mods_count; i++) {
         if (mods[i].enabled) printf("    %d. %s\n", mods[i].id, mods[i].e_name);
