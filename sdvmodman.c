@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <unistd.h>
 #include <string.h>
 #include <dirent.h>
 
@@ -39,12 +40,42 @@ int get_input(int *selected_mod) {
     return 1;
 }
 
-int main() {
+int install_mod(char *mod, size_t mod_len) {
+    DIR *mod_dir = NULL;
+    char *mod_name = &mod[mod_len - 1], installed_path[2048] = {};
+    if (!(mod_dir = opendir(mod))) {
+        perror("opendir");
+        return -1;
+    }
+    closedir(mod_dir);
+
+    while (mod_name != mod && *(mod_name - 1) != '/') {
+        mod_name--;
+    }
+
+    snprintf(installed_path, 2048, "%s%s", MOD_PATH, mod_name);
+    printf("Installing %s...\n", mod_name);
+    rename(mod, installed_path);
+    printf("Done!\n");
+
+    return 0;
+}
+
+int main(int argc, char **argv) {
     DIR *mod_dir = NULL;
     struct dirent *m = NULL;
     struct mod_t *mods = NULL;
-    int i, mods_count, selected_mod;
-    i = mods_count = selected_mod = 0;
+    int c, i, mods_count, selected_mod;
+    c = i = mods_count = selected_mod = 0;
+
+    while ((c = getopt(argc, argv, "i:")) != -1) {
+        switch (c) {
+            case 'i':
+                return install_mod(optarg, strlen(optarg));
+            default:
+                return -1;
+        }
+    }
 
     if (!(mod_dir = opendir(MOD_PATH))) {
         perror("opendir");
