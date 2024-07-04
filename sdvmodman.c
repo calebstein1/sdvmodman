@@ -31,6 +31,13 @@ void print_mods(struct mod_t *mods, int mods_count) {
     printf("\n");
 }
 
+void print_help() {
+    printf("SDV Mod Manager usage:\n\n");
+    printf("sdvmodman - launch the interactive mod manager\n");
+    printf("sdvmodman -i <mod directory path> - install the supplied mod\n");
+    printf("sdvmodman -h - display usage instructions\n");
+}
+
 int get_input(int *selected_mod) {
     char buff[5] = {};
     fgets(buff, 5, stdin);
@@ -68,10 +75,13 @@ int main(int argc, char **argv) {
     int c, i, mods_count, selected_mod;
     c = i = mods_count = selected_mod = 0;
 
-    while ((c = getopt(argc, argv, "i:")) != -1) {
+    while ((c = getopt(argc, argv, "i:h")) != -1) {
         switch (c) {
             case 'i':
                 return install_mod(optarg, strlen(optarg));
+            case 'h':
+                print_help();
+                return 0;
             default:
                 return -1;
         }
