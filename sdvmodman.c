@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
             continue;
         }
         mods[i].id = i + 1;
-        mods[i].enabled = *(m->d_name) == '.' ? false : true;
+        mods[i].enabled = *(m->d_name) != '.';
         if (mods[i].enabled) {
             snprintf(mods[i].d_name, 1024, ".%s", m->d_name);
         } else {
@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
             snprintf(new, 2048, "%s%s", MOD_PATH, mods[selected_mod].e_name);
         }
         rename(old, new);
-        mods[selected_mod].enabled = mods[selected_mod].enabled ? false : true;
+        mods[selected_mod].enabled = !mods[selected_mod].enabled;
 
         print_mods(mods, mods_count);
     }
