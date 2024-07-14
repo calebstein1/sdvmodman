@@ -10,7 +10,7 @@
 #include "config.h"
 
 struct mod_t {
-    char e_name[1024];
+    char *e_name;
     char d_name[1024];
     int id;
     bool enabled;
@@ -107,12 +107,11 @@ int main(int argc, char **argv) {
         mods[i].id = i + 1;
         mods[i].enabled = *(m->d_name) == '.' ? false : true;
         if (mods[i].enabled) {
-            strcpy(mods[i].e_name, m->d_name);
             snprintf(mods[i].d_name, 1024, ".%s", m->d_name);
         } else {
             strcpy(mods[i].d_name, m->d_name);
-            strcpy(mods[i].e_name, m->d_name + 1);
         }
+        mods[i].e_name = mods[i].d_name + 1;
         i++;
     }
     closedir(mod_dir);
